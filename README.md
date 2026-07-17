@@ -57,6 +57,30 @@ git push origin v4.2.16
 
 Release 资源命名：`csc-{version}-{target}.{tar.gz|zip}`
 
+### 二进制架构说明
+
+| Target | 文件名示例 | 架构 | 使用场景 |
+|--------|-----------|------|---------|
+| `linux-x64` | `csc-4.2.16-linux-x64.tar.gz` | x86_64（Linux） | 常规 Linux 服务器 / 桌面（Ubuntu 20.04+、Debian 11+、CentOS 8+ 等，需要较新 CPU 指令集） |
+| `linux-x64-baseline` | `csc-4.2.16-linux-x64-baseline.tar.gz` | x86_64（Linux，baseline） | 老 CPU 或虚拟化环境的 Linux 服务器，兼容仅支持 x86-64-v1 指令集（SSE3）的处理器 |
+| `linux-x64-musl` | `csc-4.2.16-linux-x64-musl.tar.gz` | x86_64（Linux musl） | Alpine Linux 及其他基于 musl libc 的发行版（如容器镜像 `alpine`） |
+| `linux-x64-musl-baseline` | `csc-4.2.16-linux-x64-musl-baseline.tar.gz` | x86_64（musl，baseline） | Alpine Linux + 老 CPU 的组合场景 |
+| `windows-x64` | `csc-4.2.16-windows-x64.zip` | x86_64（Windows） | Windows 10 / 11 及 Windows Server（需要较新 CPU） |
+| `windows-x64-baseline` | `csc-4.2.16-windows-x64-baseline.zip` | x86_64（Windows，baseline） | 老 CPU 的 Windows 机器 |
+| `darwin-arm64` | `csc-4.2.16-darwin-arm64.tar.gz` | ARM64（Apple Silicon） | M1 / M2 / M3 / M4 芯片的 Mac |
+| `darwin-x64` | `csc-4.2.16-darwin-x64.tar.gz` | x86_64（Intel Mac） | Intel 芯片的 Mac（2019 年及之后的型号一般可用） |
+| `darwin-x64-baseline` | `csc-4.2.16-darwin-x64-baseline.tar.gz` | x86_64（Intel Mac，baseline） | 更老的 Intel Mac 或 Hackintosh 等兼容性场景 |
+
+**如何选择：**
+
+- **Apple Silicon Mac（M 系列）** → `darwin-arm64`
+- **Intel Mac** → 先尝试 `darwin-x64`，若报 `Illegal instruction` 错误则改用 `darwin-x64-baseline`
+- **普通 Linux 服务器** → `linux-x64`；运行报错 `Illegal instruction`（老 CPU、低端 VPS）→ `linux-x64-baseline`
+- **Alpine Linux / Docker `alpine` 镜像** → `linux-x64-musl`（或老 CPU 时用 `linux-x64-musl-baseline`）
+- **Windows** → `windows-x64`；老机器报指令集错误 → `windows-x64-baseline`
+
+> `baseline` 版本仅使用 x86-64 最基础的指令集（SSE3 级别），兼容性最好但性能略低；非 `baseline` 版本启用了 AVX2 等现代指令集优化，在新型 CPU 上运行更快。
+
 ---
 
 ## 安装

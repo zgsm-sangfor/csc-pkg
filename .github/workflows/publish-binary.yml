@@ -56,8 +56,13 @@ jobs:
       - name: Setup SSH for review agent generation
         uses: webfactory/ssh-agent@v0.9.0
         with:
-          ssh-private-key: ${{ secrets.MY_SSH_PRIVATE_KEY }}
-        continue-on-error: true
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add github.com to known hosts
+        run: ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      - name: Verify costrict-review SSH access
+        run: git ls-remote git@github.com:zgsm-ai/costrict-review.git HEAD
 
       - name: Install dependencies
         env:

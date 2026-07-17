@@ -43,13 +43,11 @@ jobs:
       matrix:
         target: ${{ fromJson(needs.resolve.outputs.matrix) }}
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          repository: zgsm-sangfor/csc
-          ref: main
-          token: ${{ secrets.CSC_PAT }}
-          persist-credentials: false
-          submodules: false
+      - name: Checkout csc source
+        run: |
+          git clone --depth 1 --branch main https://x-access-token:${{ secrets.CSC_PAT }}@github.com/zgsm-sangfor/csc.git .
+          git submodule deinit --all -f 2>/dev/null || true
+          git config --local --remove-section submodule 2>/dev/null || true
 
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:

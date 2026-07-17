@@ -56,8 +56,7 @@ jobs:
       - name: Setup SSH for review agent generation
         uses: webfactory/ssh-agent@v0.9.0
         with:
-          ssh-private-key: ${{ secrets.MY_SSH_PRIVATE_KEY }}
-        continue-on-error: true
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Install dependencies
         env:
